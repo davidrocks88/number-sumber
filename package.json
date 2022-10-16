@@ -28,7 +28,6 @@
     "vite": "^3.0.0"
   },
   "dependencies": {
-    "classnames": "^2.3.2",
-    "js-combinatorics": "^2.1.1"
+    "classnames": "^2.3.2"
   }
 }
