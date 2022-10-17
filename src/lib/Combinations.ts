@@ -44,4 +44,5 @@ export const NUM_DIGITS_TO_POSSIBLE_SUMS = {
   }
 }
 
+export const ALL_DIGITS = [1,2,3,4,5,6,7,8,9]
 

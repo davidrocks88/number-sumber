@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    ALL_DIGITS,
     NUM_DIGITS_TO_POSSIBLE_SUMS,
     POSSIBLE_NUMBER_OF_DIGITS,
   } from "./lib/Combinations";
@@ -18,16 +19,20 @@
     }
   };
 
+  let exclusions = [];
+
   let numberOfDigits = 0;
   const clickNumberOfDigits = (numDigits: number) => {
     numberOfDigits = numDigits;
     selectedCombinations = [];
+    exclusions = [];
   };
 
   let currentTargetSum = 0;
   const clickTargetSum = (targetSum: number) => {
     currentTargetSum = targetSum;
     selectedCombinations = [];
+    exclusions = [];
   };
 
   $: minmax = NUM_DIGITS_TO_POSSIBLE_SUMS[numberOfDigits];
@@ -40,6 +45,33 @@
     numberOfDigits === 0 || currentTargetSum === 0
       ? []
       : ALL_COMBOS[numberOfDigits][currentTargetSum];
+
+  const addExclusion = (digit: Number) => {
+    if (exclusions.includes(digit)) {
+      exclusions = exclusions.filter((d) => d !== digit);
+      for (let combo of combinations) {
+        if (
+          !combo.includes(`${digit}`) &&
+          !selectedCombinations.includes(combo)
+        ) {
+          selectedCombinations = selectedCombinations.filter(
+            (s) => s !== combo
+          );
+        }
+      }
+    } else {
+      exclusions = [...exclusions, digit];
+      for (let combo of combinations) {
+        if (
+          combo.includes(`${digit}`) &&
+          !selectedCombinations.includes(combo)
+        ) {
+          selectedCombinations = [...selectedCombinations, combo];
+        }
+      }
+    }
+  };
+
   // $: console.log({ numberOfDigits, currentTargetSum, combinations });
 </script>
 
@@ -84,11 +116,30 @@
             <button
               class={classNames(
                 "bg-gray-200 p-3 font-bold rounded shadow-md min-w-4",
-                selectedCombinations.includes(combination) && "line-through"
+                selectedCombinations.includes(combination) &&
+                  "line-through opacity-50"
               )}
               on:click={() => addCombination(combination)}
             >
               {combination}
+            </button>
+          {/each}
+        </div>
+      </div>
+
+      <div class="flex flex-col mt-2">
+        <div>Exclude</div>
+        <div class="flex gap-2 items-center justify-center">
+          {#each ALL_DIGITS as digit}
+            <button
+              class={classNames(
+                "bg-gray-200 p-3 font-bold rounded shadow-md min-w-4",
+                exclusions.includes(digit) &&
+                  "bg-gray-300 border-solid border-red-300 border-2"
+              )}
+              on:click={() => addExclusion(digit)}
+            >
+              {digit}
             </button>
           {/each}
         </div>

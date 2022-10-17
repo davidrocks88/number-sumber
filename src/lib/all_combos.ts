@@ -144,6 +144,6 @@ for (let numDigits of Object.keys(RAW_TEXT)) {
 
   for (let listIndex = 0; listIndex < list.length; listIndex++) {
     const [sum, combosString] = list[listIndex]
-    ALL_COMBOS[numDigits][sum]= combosString.split(' ').map(s=>s.split('').join(', '))
+    ALL_COMBOS[numDigits][sum]= combosString.split(' ').map(s=>s.split('').join(' '))
   }
 }
