@@ -8,7 +8,7 @@
   import { ALL_COMBOS } from "./lib/all_combos";
 
   import classNames from "classnames";
-  let selectedCombinations = [];
+  $: selectedCombinations = [];
   const addCombination = (combination: string) => {
     if (selectedCombinations.includes(combination)) {
       selectedCombinations = selectedCombinations.filter(
@@ -54,8 +54,8 @@
       exclusions = exclusions.filter((d) => d !== digit);
       for (let combo of combinations) {
         if (
-          !combo.includes(`${digit}`) &&
-          !selectedCombinations.includes(combo)
+          combo.includes(`${digit}`) &&
+          selectedCombinations.includes(combo)
         ) {
           selectedCombinations = selectedCombinations.filter(
             (s) => s !== combo
@@ -81,7 +81,7 @@
       for (let combo of combinations) {
         if (
           !combo.includes(`${digit}`) &&
-          !selectedCombinations.includes(combo)
+          selectedCombinations.includes(combo)
         ) {
           selectedCombinations = selectedCombinations.filter(
             (s) => s !== combo
