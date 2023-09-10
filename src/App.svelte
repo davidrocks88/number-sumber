@@ -20,12 +20,14 @@
   };
 
   let exclusions = [];
+  let inclusions = [];
 
   let numberOfDigits = 0;
   const clickNumberOfDigits = (numDigits: number) => {
     numberOfDigits = numDigits;
     selectedCombinations = [];
     exclusions = [];
+    inclusions = [];
   };
 
   let currentTargetSum = 0;
@@ -33,6 +35,7 @@
     currentTargetSum = targetSum;
     selectedCombinations = [];
     exclusions = [];
+    inclusions = [];
   };
 
   $: minmax = NUM_DIGITS_TO_POSSIBLE_SUMS[numberOfDigits];
@@ -72,7 +75,31 @@
     }
   };
 
-  // $: console.log({ numberOfDigits, currentTargetSum, combinations });
+  const addInclusion = (digit: number) => {
+    if (inclusions.includes(digit)) {
+      inclusions = inclusions.filter((d) => d !== digit);
+      for (let combo of combinations) {
+        if (
+          !combo.includes(`${digit}`) &&
+          !selectedCombinations.includes(combo)
+        ) {
+          selectedCombinations = selectedCombinations.filter(
+            (s) => s !== combo
+          );
+        }
+      }
+    } else {
+      inclusions = [...inclusions, digit];
+      for (let combo of combinations) {
+        if (
+          !combo.includes(`${digit}`) &&
+          !selectedCombinations.includes(combo)
+        ) {
+          selectedCombinations = [...selectedCombinations, combo];
+        }
+      }
+    }
+  };
 </script>
 
 <main class="text-center p-4 mx-0 flex flex-col gap-2">
@@ -138,6 +165,24 @@
                   "bg-gray-300 border-solid border-red-300 border-2"
               )}
               on:click={() => addExclusion(digit)}
+            >
+              {digit}
+            </button>
+          {/each}
+        </div>
+      </div>
+
+      <div class="flex flex-col mt-2">
+        <div>Include</div>
+        <div class="flex gap-2 items-center justify-center">
+          {#each ALL_DIGITS as digit}
+            <button
+              class={classNames(
+                "bg-gray-200 p-3 font-bold rounded shadow-md min-w-4",
+                inclusions.includes(digit) &&
+                  "bg-gray-300 border-solid border-green-300 border-2"
+              )}
+              on:click={() => addInclusion(digit)}
             >
               {digit}
             </button>
